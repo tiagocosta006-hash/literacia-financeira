@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinLab Portugal — Simulador de Literacia Financeira (Níveis 1 a 5)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" onclick="switchTab('guia')">
+        <div class="brand-badge">€</div>
+        <div class="brand-text">
+          <h1>Simulador de Orçamento &amp; Literacia Financeira</h1>
+          <span>Aprender Fazendo · Níveis 1 a 5 · Pressupostos Portugal 2026</span>
+        </div>
+      </div>
+
+      <nav class="nav-levels" aria-label="Níveis da Simulação">
+        <button class="nav-btn active" data-tab="guia" onclick="switchTab('guia')">
+          <span>📘 Como Usar</span>
+        </button>
+        <button class="nav-btn" data-tab="nivel1" onclick="switchTab('nivel1')">
+          <span class="lvl-pill">N1</span><span>Necessidades vs Desejos</span>
+        </button>
+        <button class="nav-btn" data-tab="nivel2" onclick="switchTab('nivel2')">
+          <span class="lvl-pill">N2</span><span>Tempo &amp; Inflação</span>
+        </button>
+        <button class="nav-btn" data-tab="nivel3" onclick="switchTab('nivel3')">
+          <span class="lvl-pill">N3</span><span>Impostos &amp; Estado</span>
+        </button>
+        <button class="nav-btn" data-tab="nivel4" onclick="switchTab('nivel4')">
+          <span class="lvl-pill">N4</span><span>Banca &amp; Negócio</span>
+        </button>
+        <button class="nav-btn" data-tab="nivel5" onclick="switchTab('nivel5')">
+          <span class="lvl-pill">N5</span><span>Património &amp; Portfólio</span>
+        </button>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="btn-action" onclick="resetAllToExcelDefaults()" title="Repor todos os níveis com os valores exatos do Excel">
+          ↺ Repor Valores do Excel
+        </button>
+        <a class="btn-action primary" href="Simulacao_Niveis_1_a_5.xlsx" download="Simulacao_Niveis_1_a_5.xlsx">
+          ⬇ Excel Original
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Pedagogical Color Legend Bar -->
+  <div class="legend-bar">
+    <div class="legend-bar-inner">
+      <div class="legend-items">
+        <strong>Legenda das Cores (idêntica ao Excel):</strong>
+        <span class="legend-item"><span class="swatch input"></span> Célula para o <strong>ALUNO preencher</strong> (Amarelo + texto azul)</span>
+        <span class="legend-item"><span class="swatch calc"></span> Célula <strong>calculada automaticamente</strong> (Verde — fórmulas)</span>
+        <span class="legend-item"><span class="swatch result"></span> <strong>Resultado principal</strong> do bloco (Laranja — conclusão do exercício)</span>
+      </div>
+      <div style="color: var(--text-muted); font-weight: 600;">
+        💡 Altera qualquer valor amarelo e vê gráficos e tabelas mudarem em tempo real
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <main class="container">
+
+    <!-- ==================== TAB 0: COMO USAR (GUIA & PRESSUPOSTOS) ==================== -->
+    <section id="tab-guia" class="tab-panel active">
+      <div class="level-banner">
+        <div class="level-banner-top">
+          <div>
+            <span class="level-tag">Guia Pedagógico &amp; Ponto de Partida</span>
+            <h2>Simulação da Gestão de um Orçamento Familiar — Níveis 1 a 5</h2>
+            <p>
+              Esta aplicação interativa transforma o ficheiro <strong>Simulacao_Niveis_1_a_5.xlsx</strong> numa plataforma viva.
+              Cada nível integra a folha de simulação e a folha de resumo com gráficos dinâmicos.
+              <strong>O aluno aprende enquanto faz:</strong> altera os valores, vê o resultado mudar instantaneamente e tira as suas próprias conclusões.
+            </p>
+            <div class="banner-Controls">
+              <button class="btn-banner highlight" onclick="switchTab('nivel1')">🚀 Começar no Nível 1</button>
+              <button class="btn-banner" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- O que se aprende em cada nível -->
+      <h3 style="margin-bottom: 0.85rem; color: var(--bg-navy); font-size: 1.15rem;">🎯 O que se aprende em cada nível (clica para abrir)</h3>
+      <div class="journey-grid">
+        <div class="journey-card" onclick="switchTab('nivel1')">
+          <div>
+            <span class="journey-num">Nível 1 · Base</span>
+            <h3>Necessidades vs Desejos</h3>
+            <p>Separar o essencial do supérfluo, testar a regra 50/30/20 e fechar o mês sem saldo negativo.</p>
+          </div>
+          <span class="journey-cta">Abrir Simulador &amp; Gráfico N1 →</span>
+        </div>
+
+        <div class="journey-card" onclick="switchTab('nivel2')">
+          <div>
+            <span class="journey-num">Nível 2 · Poder de Compra</span>
+            <h3>Tempo e Inflação</h3>
+            <p>Porque é que o mesmo salário compra menos todos os anos e como o preço de um simples café evolui em 20 anos.</p>
+          </div>
+          <span class="journey-cta">Abrir Simulador &amp; Gráficos N2 →</span>
+        </div>
+
+        <div class="journey-card" onclick="switchTab('nivel3')">
+          <div>
+            <span class="journey-num">Nível 3 · Cidadania Fiscal</span>
+            <h3>Impostos e Papel do Estado</h3>
+            <p>Salário bruto vs líquido, Segurança Social, IVA oculto nos preços, IMI, IRC e reflexão sobre o papel do Estado.</p>
+          </div>
+          <span class="journey-cta">Abrir Simulador &amp; Gráficos N3 →</span>
+        </div>
+
+        <div class="journey-card" onclick="switchTab('nivel4')">
+          <div>
+            <span class="journey-num">Nível 4 · Decisões Financeiras</span>
+            <h3>Empreendedorismo e Banca</h3>
+            <p>Juros simples vs compostos, o custo real do crédito pessoal, depósitos vs Certificados de Aforro, negócio próprio e seguros.</p>
+          </div>
+          <span class="journey-cta">Abrir Simulador &amp; Gráficos N4 →</span>
+        </div>
+
+        <div class="journey-card" onclick="switchTab('nivel5')">
+          <div>
+            <span class="journey-num">Nível 5 · Longo Prazo</span>
+            <h3>Património e Portfólio</h3>
+            <p>Dimensionar primeiro o fundo de emergência e transformar a poupança mensal em património ao longo de 20 anos.</p>
+          </div>
+          <span class="journey-cta">Abrir Simulador &amp; Gráficos N5 →</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Demonstração Interativa da Legenda das Cores -->
+        <div class="col-5">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🎨 Como funcionam as células (Exemplo Interativo)</div>
+            </div>
+            <p class="card-subtitle">Experimenta alterar o valor em amarelo abaixo (tal como na folha «Como Usar» do Excel):</p>
+            <div class="form-rows">
+              <div class="form-row">
+                <div class="form-label">Célula para o ALUNO preencher</div>
+                <div class="input-cell-wrap">
+                  <input type="number" id="demo-bruto" class="excel-input" value="920" step="10" oninput="updateDemoLegend()" />
+                </div>
+                <div class="form-hint">Amarelo + texto azul. É aqui que se escreve.</div>
+              </div>
+              <div class="form-row">
+                <div class="form-label">Célula calculada automaticamente (11%)</div>
+                <div id="demo-ss" class="calc-cell">101,20 €</div>
+                <div class="form-hint">Verde. Não escrever — contém fórmulas (<code>=B6*0,11</code>).</div>
+              </div>
+              <div class="form-row">
+                <div class="form-label">Resultado principal do bloco</div>
+                <div id="demo-liquido" class="result-cell">818,80 €</div>
+                <div class="form-hint">Laranja. É a resposta a que o exercício quer chegar (<code>=B6-B7</code>).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabela de Pressupostos e Fontes 2026 -->
+        <div class="col-7">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📊 Pressupostos e Fontes dos Valores Pré-Preenchidos (Portugal 2026)</div>
+            </div>
+            <div class="table-wrap">
+              <table class="sim-table">
+                <thead>
+                  <tr>
+                    <th>Variável</th>
+                    <th>Valor usado</th>
+                    <th>Fonte / observação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Salário mínimo nacional (2026)</strong></td>
+                    <td>920 € brutos / mês (14 meses)</td>
+                    <td>Lei do Orçamento do Estado para 2026. Valor indicado na proposta de valor do projeto.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Taxa de inflação (IPC)</strong></td>
+                    <td>2,3% ao ano</td>
+                    <td>INE — variação média anual do IPC em 2025. Em agosto de 2026 a variação homóloga era de 3,3%.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Contribuição do trabalhador para a Segurança Social</strong></td>
+                    <td>11%</td>
+                    <td>Taxa contributiva geral dos trabalhadores por conta de outrem.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Contribuição da entidade empregadora</strong></td>
+                    <td>23,75%</td>
+                    <td>Taxa contributiva geral da entidade empregadora.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Retenção de IRS no salário mínimo</strong></td>
+                    <td>0%</td>
+                    <td>O mínimo de existência (11 480 €/ano em 2026) isenta de IRS quem aufere o salário mínimo.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Taxas de IVA (Continente)</strong></td>
+                    <td>23% / 13% / 6%</td>
+                    <td>Artigo 18.º do Código do IVA: taxa normal, intermédia e reduzida.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Taxa de IRC (2026)</strong></td>
+                    <td>19% geral / 15% PME até 50 000 €</td>
+                    <td>Lei n.º 73-A/2025 (OE 2026). Desce para 18% em 2027 e 17% em 2028.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Taxa de IMI (prédios urbanos)</strong></td>
+                    <td>0,30% (mínimo)</td>
+                    <td>Fixada por cada município entre 0,3% e 0,45%. Prédios rústicos: 0,8%.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Certificados de Aforro Série F</strong></td>
+                    <td>2,500% bruto ao ano</td>
+                    <td>Taxa base do IGCP para novas subscrições em setembro de 2026. Máximo legal da taxa base: 2,5%.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>IRS sobre juros e mais-valias</strong></td>
+                    <td>28%</td>
+                    <td>Taxa liberatória aplicável à generalidade dos rendimentos de capitais.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Retornos estimados dos instrumentos (Nível 5)</strong></td>
+                    <td>1% a 7% ao ano</td>
+                    <td>VALORES ILUSTRATIVOS, escolhidos para fins pedagógicos. Não são previsões nem recomendações de investimento.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pedagogical-note">
+              <strong>Aviso:</strong> este simulador é um instrumento pedagógico. Os valores de rendibilidade são ilustrativos e não constituem aconselhamento financeiro. As taxas e os impostos devem ser confirmados no Portal das Finanças e nos sites do Banco de Portugal, do IGCP e da Segurança Social antes de qualquer decisão real.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 1: NÍVEL 1 (NECESSIDADES VS DESEJOS) ==================== -->
+    <section id="tab-nivel1" class="tab-panel">
+      <div class="level-banner">
+        <div class="level-banner-top">
+          <div>
+            <span class="level-tag">Nível 1 · Orçamento Familiar</span>
+            <h2>NÍVEL 1 — Necessidades vs Desejos (Orçamento Familiar)</h2>
+            <p>
+              <strong>Como jogar:</strong> preenche os valores em amarelo (rendimento, objetivo de poupança e despesas). Classifica cada gasto como <strong>Necessidade</strong> ou <strong>Desejo</strong>. O objetivo é equilibrar o orçamento sem ficar negativo.<br>
+              <em>Regra do jogo (sugestão): Tenta manter Necessidades ≤ 50% | Desejos ≤ 30% | Poupança ≥ 20%.</em>
+            </p>
+            <div class="banner-Controls">
+              <button class="btn-banner highlight" onclick="loadN1Preset('realista')">✨ Preencher Exemplo Realista (920 €)</button>
+              <button class="btn-banner" onclick="loadN1Preset('excel')">📄 Repor Valores Originais do Excel</button>
+              <button class="btn-banner" onclick="addN1Row()">➕ Adicionar Categoria</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPIs Nível 1 -->
+      <div class="kpi-grid">
+        <div class="kpi-card calc">
+          <span class="kpi-label">Total Necessidades (€)</span>
+          <div class="kpi-value" id="n1-kpi-nec">48,00 €</div>
+          <span class="kpi-note" id="n1-kpi-nec-pct">5,3% do rendimento (Meta ≤ 50%)</span>
+        </div>
+        <div class="kpi-card calc">
+          <span class="kpi-label">Total Desejos (€)</span>
+          <div class="kpi-value" id="n1-kpi-des">100,00 €</div>
+          <span class="kpi-note" id="n1-kpi-des-pct">11,1% do rendimento (Meta ≤ 30%)</span>
+        </div>
+        <div class="kpi-card calc">
+          <span class="kpi-label">Total Despesas (€)</span>
+          <div class="kpi-value" id="n1-kpi-tot">148,00 €</div>
+          <span class="kpi-note" id="n1-kpi-saldo-desp">Saldo após despesas: 752,00 €</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Saldo após despesas e poupança</span>
+          <div class="kpi-value" id="n1-kpi-saldo-final">652,00 €</div>
+          <span class="kpi-note" id="n1-kpi-status">Orçamento equilibrado ✓</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Coluna Esquerda: Inputs & Tabela de Despesas -->
+        <div class="col-7">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">1. Rendimento, Poupança e Despesas Mensais</div>
+            </div>
+            <div class="form-rows" style="margin-bottom: 1.25rem;">
+              <div class="form-row">
+                <label class="form-label" for="n1-rendimento">Rendimento mensal (€)</label>
+                <div class="input-cell-wrap">
+                  <input type="number" id="n1-rendimento" class="excel-input" value="900" step="10" oninput="recalcN1()" />
+                </div>
+                <span class="form-hint">O que entra no orçamento familiar todos os meses.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n1-poupanca">Objetivo de poupança (€)</label>
+                <div class="input-cell-wrap">
+                  <input type="number" id="n1-poupanca" class="excel-input" value="100" step="10" oninput="recalcN1()" />
+                </div>
+                <span class="form-hint">Paga-te a ti próprio primeiro (recomendado ≥ 20%).</span>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="sim-table" id="n1-table">
+                <thead>
+                  <tr>
+                    <th>Categoria</th>
+                    <th>Tipo (N/D)</th>
+                    <th class="num">Valor (€)</th>
+                    <th class="num">% do rendimento</th>
+                    <th>Notas</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="n1-tbody">
+                  <!-- Preenchido via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Resumo & Gráfico N1 + Regra 50/30/20 -->
+        <div class="col-5">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📊 Resumo &amp; Gráfico N1 — Distribuição do Orçamento</div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-n1" class="sim-chart"></canvas>
+            </div>
+
+            <div class="table-wrap" style="margin-top: 1rem;">
+              <table class="sim-table">
+                <thead>
+                  <tr>
+                    <th>Componente</th>
+                    <th class="num">Valor (€)</th>
+                    <th class="num">% sobre Rendimento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Rendimento</td>
+                    <td class="num td-calc" id="n1-res-rend">900,00 €</td>
+                    <td class="num td-calc">100,0%</td>
+                  </tr>
+                  <tr>
+                    <td>Necessidades</td>
+                    <td class="num td-calc" id="n1-res-nec">48,00 €</td>
+                    <td class="num td-calc" id="n1-res-nec-pct">5,3%</td>
+                  </tr>
+                  <tr>
+                    <td>Desejos</td>
+                    <td class="num td-calc" id="n1-res-des">100,00 €</td>
+                    <td class="num td-calc" id="n1-res-des-pct">11,1%</td>
+                  </tr>
+                  <tr>
+                    <td>Poupança (planeada)</td>
+                    <td class="num td-calc" id="n1-res-poup">100,00 €</td>
+                    <td class="num td-calc" id="n1-res-poup-pct">11,1%</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Total alocado (despesas + poupança)</strong></td>
+                    <td class="num td-calc" id="n1-res-aloc-eur">248,00 €</td>
+                    <td class="num td-calc" id="n1-res-aloc-pct">27,6%</td>
+                  </tr>
+                  <tr class="row-total">
+                    <td>Saldo livre (após despesas)</td>
+                    <td class="num td-result" id="n1-res-livre">752,00 €</td>
+                    <td class="num td-result" id="n1-res-livre-pct">83,6%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Termómetro da Regra 50 / 30 / 20 -->
+            <div style="margin-top: 1.25rem;">
+              <h4 style="font-size: 0.9rem; color: var(--bg-navy); margin-bottom: 0.4rem;">🎯 Termómetro da Regra 50 / 30 / 20</h4>
+              <div class="rule-bars">
+                <div class="rule-bar-item">
+                  <div class="rule-bar-head">
+                    <span>Necessidades (Meta ≤ 50%)</span>
+                    <span id="n1-bar-nec-lbl">5,3%</span>
+                  </div>
+                  <div class="rule-track">
+                    <div class="rule-fill" id="n1-bar-nec" style="width: 5.3%; background: #0d9488;"></div>
+                  </div>
+                </div>
+                <div class="rule-bar-item">
+                  <div class="rule-bar-head">
+                    <span>Desejos (Meta ≤ 30%)</span>
+                    <span id="n1-bar-des-lbl">11,1%</span>
+                  </div>
+                  <div class="rule-track">
+                    <div class="rule-fill" id="n1-bar-des" style="width: 11.1%; background: #f59e0b;"></div>
+                  </div>
+                </div>
+                <div class="rule-bar-item">
+                  <div class="rule-bar-head">
+                    <span>Poupança planeada (Meta ≥ 20%)</span>
+                    <span id="n1-bar-poup-lbl">11,1%</span>
+                  </div>
+                  <div class="rule-track">
+                    <div class="rule-fill" id="n1-bar-poup" style="width: 11.1%; background: #2563eb;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: NÍVEL 2 (TEMPO E INFLAÇÃO) ==================== -->
+    <section id="tab-nivel2" class="tab-panel">
+      <div class="level-banner">
+        <div class="level-banner-top">
+          <div>
+            <span class="level-tag">Nível 2 · Tempo e Poder de Compra</span>
+            <h2>NÍVEL 2 — Implicações do Tempo e da Inflação</h2>
+            <p>
+              <strong>O que é a inflação?</strong> Inflação é a subida geral e continuada dos preços. Se os preços sobem 2,3% num ano e o teu salário fica igual, tu não perdes euros — perdes <strong>PODER DE COMPRA</strong>: com o mesmo dinheiro passas a levar menos coisas para casa. É por isso que a pergunta certa não é «quanto ganho?», mas sim «o que é que consigo comprar com o que ganho?».
+            </p>
+            <div class="banner-Controls">
+              <button class="btn-banner highlight" onclick="syncFromN1ToN2()">🔗 Trazer Dados do Nível 1</button>
+              <button class="btn-banner" onclick="setZeroWageGrowthN2()">🧪 Experimentar Aumento Salarial = 0%</button>
+              <button class="btn-banner" onclick="resetN2()">📄 Repor Valores do Excel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. CONCLUSÕES (KPI Strip) -->
+      <div class="kpi-grid">
+        <div class="kpi-card result">
+          <span class="kpi-label">Poder de compra perdido (10 anos)</span>
+          <div class="kpi-value" id="n2-kpi-perda-eur">110,45 €/mês</div>
+          <span class="kpi-note">Quanto vale a menos, a preços de hoje, o salário do ano 10.</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Perda de poder de compra (%)</span>
+          <div class="kpi-value" id="n2-kpi-perda-pct">12,0%</div>
+          <span class="kpi-note">Se for positiva, os preços sobem mais depressa do que o salário.</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Ganho dos juros ao fim de 10 anos</span>
+          <div class="kpi-value" id="n2-kpi-ganho-juros">1 444,06 €</div>
+          <span class="kpi-note">Dinheiro que a poupança gerou sozinha, só por não estar parada.</span>
+        </div>
+        <div class="kpi-card calc">
+          <span class="kpi-label">Juro real da poupança (%)</span>
+          <div class="kpi-value" id="n2-kpi-juro-real">+0,20%</div>
+          <span class="kpi-note">Juro descontado da inflação. Se negativo, perde poder de compra.</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- 1. Preencher Dados + 4. Exemplo do Café -->
+        <div class="col-5">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">1. Preenche os Teus Dados</div>
+            </div>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n2-rendimento">Rendimento mensal atual (€)</label>
+                <input type="number" id="n2-rendimento" class="excel-input" value="920" step="10" oninput="recalcN2()" />
+                <span class="form-hint">Salário mínimo nacional em 2026. Adapta ao teu agregado.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n2-despesas">Despesas mensais totais (€)</label>
+                <input type="number" id="n2-despesas" class="excel-input" value="720" step="10" oninput="recalcN2()" />
+                <span class="form-hint">Traz o total de despesas do Nível 1.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n2-poupanca">Poupança mensal (€)</label>
+                <input type="number" id="n2-poupanca" class="excel-input" value="100" step="10" oninput="recalcN2()" />
+                <span class="form-hint">Quanto consegues guardar por mês.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n2-inflacao">Taxa de inflação anual (%)</label>
+                <input type="number" id="n2-inflacao" class="excel-input" value="2.3" step="0.1" oninput="recalcN2()" />
+                <span class="form-hint">INE: variação média anual do IPC em 2025 (2,3%).</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n2-aumento">Aumento salarial anual esperado (%)</label>
+                <input type="number" id="n2-aumento" class="excel-input" value="1.0" step="0.1" oninput="recalcN2()" />
+                <span class="form-hint">Experimenta pôr 0% e vê o que acontece.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n2-rendibilidade">Rendibilidade anual da poupança (%)</label>
+                <input type="number" id="n2-rendibilidade" class="excel-input" value="2.5" step="0.1" oninput="recalcN2()" />
+                <span class="form-hint">Certificados de Aforro Série F, set. 2026: 2,500%.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Exemplo Prático — O Preço do Café -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">☕ 4. Exemplo Prático — O Preço do Café</div>
+            </div>
+            <p class="card-subtitle">
+              Um exemplo que se percebe sem calculadora: se um café custa hoje o valor abaixo e a inflação se mantiver, vê quanto custará daqui a 5, 10 e 20 anos — e quantos cafés é que 10 € compram em cada momento.
+            </p>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n2-cafe-hoje">Preço de um café hoje (€)</label>
+                <input type="number" id="n2-cafe-hoje" class="excel-input" value="0.80" step="0.05" oninput="recalcN2()" />
+                <span class="form-hint">Altera para o preço do café da tua zona.</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Preço daqui a 5 anos (€)</span>
+                <div class="calc-cell" id="n2-cafe-5">0,90 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Preço daqui a 10 anos (€)</span>
+                <div class="calc-cell" id="n2-cafe-10">1,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Preço daqui a 20 anos (€)</span>
+                <div class="calc-cell" id="n2-cafe-20">1,26 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Cafés que 10 € compram <strong>hoje</strong></span>
+                <div class="calc-cell" id="n2-cafes-hoje">12,5 cafés</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Cafés que 10 € compram <strong>daqui a 20 anos</strong></span>
+                <div class="result-cell" id="n2-cafes-20">7,9 cafés</div>
+              </div>
+            </div>
+            <div class="coffee-visual" id="n2-coffee-cups"></div>
+          </div>
+        </div>
+
+        <!-- Gráficos N2 -->
+        <div class="col-7">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📈 Gráfico 1 — Salário vs preços ao longo de 10 anos</div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-n2-salario" class="sim-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📈 Gráfico 2 — Poupar debaixo do colchão vs poupar a render</div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-n2-poupanca" class="sim-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Tabela de Simulação a 10 Anos -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">2. Simulação Completa a 10 Anos (Ano 0 a Ano 10)</div>
+        </div>
+        <div class="table-wrap">
+          <table class="sim-table">
+            <thead>
+              <tr>
+                <th>Ano</th>
+                <th class="num">Salário nominal (€)</th>
+                <th class="num">Custo do mesmo cabaz (€)</th>
+                <th class="num">Sobra mensal (€)</th>
+                <th class="num">Salário a preços de hoje (€)</th>
+                <th class="num">Poupança sem juros (€)</th>
+                <th class="num">Poupança com juros (€)</th>
+                <th class="num">Poupança a preços de hoje (€)</th>
+              </tr>
+            </thead>
+            <tbody id="n2-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pedagogical-note">
+          <strong>Pressupostos:</strong> inflação constante ao longo de todo o período (na realidade varia todos os anos) e juros capitalizados uma vez por ano. Fonte da taxa de inflação: INE, IPC — variação média anual de 2025 (2,3%). Fonte da rendibilidade: IGCP, Certificados de Aforro Série F, setembro de 2026 (2,500% brutos).
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: NÍVEL 3 (IMPOSTOS E PAPEL DO ESTADO) ==================== -->
+    <section id="tab-nivel3" class="tab-panel">
+      <div class="level-banner">
+        <div class="level-banner-top">
+          <div>
+            <span class="level-tag">Nível 3 · Cidadania Fiscal &amp; Estado</span>
+            <h2>NÍVEL 3 — Desmistificar os Impostos e o Papel do Estado</h2>
+            <p>
+              <strong>Para que servem os impostos?</strong> Os impostos são a forma como o Estado financia aquilo que usamos todos os dias sem pagar na hora: escolas, hospitais, estradas, tribunais, polícia e pensões. Há impostos <strong>DIRETOS</strong>, que incidem sobre o que ganhamos (IRS nas pessoas, IRC nas empresas) e impostos <strong>INDIRETOS</strong>, que incidem sobre o que consumimos (IVA). O IMI incide sobre o património imobiliário e é receita do município onde vives.
+            </p>
+            <div class="banner-Controls">
+              <button class="btn-banner" onclick="resetN3()">📄 Repor Valores do Excel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Quanto pagas ao Estado ao todo? (KPIs principais) -->
+      <div class="kpi-grid">
+        <div class="kpi-card result">
+          <span class="kpi-label">Salário Líquido Mensal</span>
+          <div class="kpi-value" id="n3-kpi-liquido">818,80 €</div>
+          <span class="kpi-note">É este o dinheiro que entra efetivamente na conta.</span>
+        </div>
+        <div class="kpi-card calc">
+          <span class="kpi-label">Custo Total para a Empresa</span>
+          <div class="kpi-value" id="n3-kpi-custo-emp">1 138,50 €</div>
+          <span class="kpi-note" id="n3-kpi-cunha">Diferença empresa vs líquido: 28,1%</span>
+        </div>
+        <div class="kpi-card calc">
+          <span class="kpi-label">IVA Pago por Mês / Ano</span>
+          <div class="kpi-value" id="n3-kpi-iva-mes">41,36 €/mês</div>
+          <span class="kpi-note" id="n3-kpi-iva-ano">496,36 €/ano (5,1% do salário líquido)</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Total entregue ao Estado / mês</span>
+          <div class="kpi-value" id="n3-kpi-total-estado">167,56 €</div>
+          <span class="kpi-note" id="n3-kpi-total-estado-pct">18,2% do salário bruto (SS + IRS + IVA + IMI/12)</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Bloco 1: Do Salário Bruto ao Salário Líquido -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">1. Do Salário Bruto ao Salário Líquido</div>
+            </div>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n3-bruto">Salário bruto mensal (€)</label>
+                <input type="number" id="n3-bruto" class="excel-input" value="920" step="10" oninput="recalcN3()" />
+                <span class="form-hint">Salário mínimo nacional em 2026.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n3-ss-trab">Segurança Social — trabalhador (%)</label>
+                <input type="number" id="n3-ss-trab" class="excel-input" value="11" step="0.5" oninput="recalcN3()" />
+                <span class="form-hint">Taxa contributiva geral do trabalhador.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n3-irs-taxa">Retenção na fonte de IRS (%)</label>
+                <input type="number" id="n3-irs-taxa" class="excel-input" value="0" step="0.5" oninput="recalcN3()" />
+                <span class="form-hint">0% no SMN: mínimo de existência (11 480 €/ano) isenta-o.</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Desconto para a Segurança Social (€)</span>
+                <div class="calc-cell" id="n3-ss-eur">101,20 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Retenção de IRS (€)</span>
+                <div class="calc-cell" id="n3-irs-eur">0,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>SALÁRIO LÍQUIDO (€)</strong></span>
+                <div class="result-cell" id="n3-liquido-eur">818,80 €</div>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n3-ss-emp">Segurança Social — entidade empregadora (%)</label>
+                <input type="number" id="n3-ss-emp" class="excel-input" value="23.75" step="0.25" oninput="recalcN3()" />
+                <span class="form-hint">Pago pela empresa, além do salário.</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Custo total para a empresa (€)</span>
+                <div class="calc-cell" id="n3-custo-emp">1 138,50 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Diferença entre o que a empresa paga e o que recebes (%)</span>
+                <div class="calc-cell" id="n3-diff-emp">28,1%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico 1 N3: Composição do Salário Bruto -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📊 Resumo N3 — Composição do Salário Bruto</div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-n3-salario" class="sim-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco 2: O IVA que pagas sem dar por isso -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">2. O IVA que Pagas Sem Dar por Isso</div>
+        </div>
+        <p class="card-subtitle">
+          O preço que vês na etiqueta já inclui IVA. Preenche o que gastas por mês em cada categoria e descobre quanto desse dinheiro é imposto. Taxas em vigor no Continente: normal 23%, intermédia 13%, reduzida 6%.
+        </p>
+        <div class="table-wrap">
+          <table class="sim-table">
+            <thead>
+              <tr>
+                <th>Categoria de despesa</th>
+                <th class="num">Valor pago com IVA (€)</th>
+                <th class="num">Taxa de IVA (%)</th>
+                <th class="num">Preço sem IVA (€)</th>
+                <th class="num">IVA pago (€)</th>
+                <th>Porquê esta taxa?</th>
+              </tr>
+            </thead>
+            <tbody id="n3-iva-tbody"></tbody>
+            <tfoot>
+              <tr class="row-total">
+                <td>TOTAIS MENSAIS</td>
+                <td class="num td-calc" id="n3-iva-tot-com">690,00 €</td>
+                <td></td>
+                <td class="num td-calc" id="n3-iva-tot-sem">648,64 €</td>
+                <td class="num td-result" id="n3-iva-tot-imposto">41,36 €</td>
+                <td id="n3-iva-resumo-extra">IVA num ano: 496,36 € (5,1% do salário líquido)</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Gráfico 2 N3: IVA por Categoria -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📊 IVA Pago por Categoria de Despesa (€/mês)</div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-n3-iva" class="sim-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blocos 3 e 4: IMI e IRC -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">3. IMI — O Imposto da Casa</div>
+            </div>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n3-vpt">Valor Patrimonial Tributário da casa (€)</label>
+                <input type="number" id="n3-vpt" class="excel-input" value="100000" step="5000" oninput="recalcN3()" />
+                <span class="form-hint">Consulta-se na caderneta predial, no Portal das Finanças.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n3-imi-taxa">Taxa de IMI do município (%)</label>
+                <input type="number" id="n3-imi-taxa" class="excel-input" value="0.30" step="0.01" oninput="recalcN3()" />
+                <span class="form-hint">Cada município fixa entre 0,3% e 0,45%. Rústicos: 0,8%.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n3-dep">Número de dependentes a cargo</label>
+                <input type="number" id="n3-dep" class="excel-input" value="0" min="0" max="10" step="1" oninput="recalcN3()" />
+                <span class="form-hint">IMI familiar: dedução de 30 € (1), 70 € (2), 140 € (3+).</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">IMI anual antes de deduções (€)</span>
+                <div class="calc-cell" id="n3-imi-bruto">300,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Dedução por dependentes (€)</span>
+                <div class="calc-cell" id="n3-imi-ded">0,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>IMI A PAGAR (€/ano)</strong></span>
+                <div class="result-cell" id="n3-imi-pagar">300,00 €</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">4. IRC — O Imposto das Empresas</div>
+              <button class="btn-small" onclick="document.getElementById('n3-lucro').value=60000; recalcN3();">Experimentar 60 000 €</button>
+            </div>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n3-lucro">Lucro tributável da empresa (€/ano)</label>
+                <input type="number" id="n3-lucro" class="excel-input" value="40000" step="5000" oninput="recalcN3()" />
+                <span class="form-hint">Experimenta pôr 60 000 € e vê as duas taxas a funcionar.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n3-irc-pme">Taxa PME até 50 000 € (%)</label>
+                <input type="number" id="n3-irc-pme" class="excel-input" value="15" step="0.5" oninput="recalcN3()" />
+                <span class="form-hint">Lei n.º 73-A/2025 (OE 2026).</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n3-irc-geral">Taxa geral acima de 50 000 € (%)</label>
+                <input type="number" id="n3-irc-geral" class="excel-input" value="19" step="0.5" oninput="recalcN3()" />
+                <span class="form-hint">19% em 2026; 18% em 2027; 17% em 2028.</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>IRC a pagar (€/ano)</strong></span>
+                <div class="result-cell" id="n3-irc-pagar">6 000,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Taxa efetiva de IRC (%)</span>
+                <div class="calc-cell" id="n3-irc-efetiva">15,0%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco 6: Reflexão — Que papel deve ter o Estado? -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">6. Reflexão — Que Papel Deve Ter o Estado?</div>
+        </div>
+        <p class="card-subtitle">
+          Não há resposta certa. Um Estado <strong>LIBERAL</strong> cobra menos impostos e deixa mais decisões ao mercado e às pessoas; um Estado <strong>INTERVENTIVO</strong> cobra mais e presta mais serviços públicos; um Estado <strong>ABSTENCIONISTA</strong> intervém o mínimo possível. Discute com a turma e regista a tua posição.
+        </p>
+        <div class="form-rows">
+          <div class="form-row">
+            <label class="form-label" for="n3-estado-tipo">Na tua opinião, o Estado português é...</label>
+            <select id="n3-estado-tipo" class="excel-select" onchange="saveReflectionN3()">
+              <option value="Interventivo" selected>Interventivo</option>
+              <option value="Liberal">Liberal</option>
+              <option value="Abstencionista">Abstencionista</option>
+            </select>
+            <span class="form-hint">Escolhe: Liberal, Interventivo ou Abstencionista.</span>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="n3-justifica">Justifica em duas linhas:</label>
+            <input type="text" id="n3-justifica" class="excel-input" placeholder="Escreve aqui a tua resposta..." oninput="saveReflectionN3()" />
+            <span class="form-hint">Regista os teus argumentos principais.</span>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="n3-troca">Se pudesses, trocavas menos impostos por menos serviços públicos?</label>
+            <input type="text" id="n3-troca" class="excel-input" placeholder="Pensa em saúde, escola e pensões antes de responder..." oninput="saveReflectionN3()" />
+            <span class="form-hint">Pensa em saúde, escola e pensões antes de responder.</span>
+          </div>
+        </div>
+        <div class="pedagogical-note">
+          <strong>Fontes:</strong> Código do IVA, art. 18.º (taxas de 23%, 13% e 6% no Continente); Lei n.º 73-A/2025 — Orçamento do Estado para 2026 (IRC de 19% e 15% para PME até 50 000 €); Código do IMI, art. 112.º (0,3% a 0,45% em prédios urbanos, 0,8% em rústicos); mínimo de existência de IRS de 11 480 € anuais em 2026. Simplificação assumida: o IRS é tratado como uma taxa fixa de retenção, quando na realidade resulta de escalões progressivos e de deduções específicas de cada agregado.
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: NÍVEL 4 (EMPREENDEDORISMO E SISTEMA BANCÁRIO) ==================== -->
+    <section id="tab-nivel4" class="tab-panel">
+      <div class="level-banner">
+        <div class="level-banner-top">
+          <div>
+            <span class="level-tag">Nível 4 · Banca, Crédito, Negócio e Seguros</span>
+            <h2>NÍVEL 4 — Empreendedorismo e Sistema Bancário</h2>
+            <p>
+              <strong>Juros: a força que trabalha a teu favor ou contra ti.</strong> O juro é o preço do dinheiro no tempo. Quando <strong>POUPAS</strong>, o banco paga-te juros. Quando pedes <strong>CRÉDITO</strong>, és tu que os pagas. No juro simples, os juros incidem sempre sobre o capital inicial. No juro composto, os juros passam eles próprios a render juros — e é aí que a diferença explode ao fim de alguns anos.
+            </p>
+            <div class="banner-Controls">
+              <button class="btn-banner" onclick="resetN4()">📄 Repor Valores do Excel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPIs Nível 4 -->
+      <div class="kpi-grid">
+        <div class="kpi-card result">
+          <span class="kpi-label">Vantagem Juro Composto (20 anos)</span>
+          <div class="kpi-value" id="n4-kpi-composto">+6 257,97 €</div>
+          <span class="kpi-note">Foi o juro composto que fez este dinheiro do nada.</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Custo do Crédito (só juros)</span>
+          <div class="kpi-value" id="n4-kpi-custo-cred">1 082,92 €</div>
+          <span class="kpi-note" id="n4-kpi-pressa">Preço da pressa vs poupar primeiro: 1 472,28 €</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Ponto de Equilíbrio do Negócio</span>
+          <div class="kpi-value" id="n4-kpi-breakeven">100 unid./mês</div>
+          <span class="kpi-note" id="n4-kpi-lucro-neg">Lucro mensal: 500,00 € (Payback: 6 meses)</span>
+        </div>
+        <div class="kpi-card calc">
+          <span class="kpi-label">Custo Mensal dos Seguros</span>
+          <div class="kpi-value" id="n4-kpi-seguros">75,00 €/mês</div>
+          <span class="kpi-note" id="n4-kpi-seguros-ano">Total anual: 900,00 €/ano</span>
+        </div>
+      </div>
+
+      <!-- Bloco 1: Juros Simples vs Juros Compostos -->
+      <div class="grid-2">
+        <div class="col-5">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">1. Juros Simples vs Juros Compostos</div>
+            </div>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n4-cap-ini">Capital inicial (€)</label>
+                <input type="number" id="n4-cap-ini" class="excel-input" value="1000" step="100" oninput="recalcN4()" />
+                <span class="form-hint">Montante inicial aplicado no Ano 0.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-reforco">Reforço mensal (€)</label>
+                <input type="number" id="n4-reforco" class="excel-input" value="50" step="10" oninput="recalcN4()" />
+                <span class="form-hint">Quanto acrescentas todos os meses.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-taxa-juro">Taxa de juro anual (%)</label>
+                <input type="number" id="n4-taxa-juro" class="excel-input" value="4.0" step="0.25" oninput="recalcN4()" />
+                <span class="form-hint">Valor ilustrativo, para comparar os dois regimes.</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Total investido do bolso (20 anos)</span>
+                <div class="calc-cell" id="n4-inv-20">13 000,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Com juros simples (20 anos)</span>
+                <div class="calc-cell" id="n4-simp-20">13 800,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Com juros compostos (20 anos)</span>
+                <div class="calc-cell" id="n4-comp-20">20 057,97 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>Diferença ao fim de 20 anos (€)</strong></span>
+                <div class="result-cell" id="n4-diff-20">6 257,97 €</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-7">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📈 Gráfico 1 — Juros simples vs juros compostos ao longo de 20 anos</div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-n4-juros" class="sim-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco 2: Crédito Pessoal — Quanto custa mesmo? -->
+      <div class="grid-2">
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">2. Crédito Pessoal — Quanto Custa Mesmo?</div>
+            </div>
+            <p class="card-subtitle">
+              Um crédito pessoal permite comprar hoje o que ainda não podes pagar. Em troca, devolves mais do que pediste. Simula e compara com a alternativa: guardar a mesma quantia durante o mesmo tempo e comprar depois.
+            </p>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n4-cred-valor">Montante do crédito (€)</label>
+                <input type="number" id="n4-cred-valor" class="excel-input" value="5000" step="250" oninput="recalcN4()" />
+                <span class="form-hint">Valor pedido ao banco.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-cred-tan">TAN — taxa anual nominal (%)</label>
+                <input type="number" id="n4-cred-tan" class="excel-input" value="8.0" step="0.25" oninput="recalcN4()" />
+                <span class="form-hint">A TAEG, que inclui comissões e seguros, é ainda mais alta.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-cred-prazo">Prazo (meses)</label>
+                <input type="number" id="n4-cred-prazo" class="excel-input" value="60" min="1" max="360" step="6" oninput="recalcN4()" />
+                <span class="form-hint">Duração do empréstimo em meses.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-cred-poup-taxa">Taxa da poupança alternativa (%)</label>
+                <input type="number" id="n4-cred-poup-taxa" class="excel-input" value="2.5" step="0.1" oninput="recalcN4()" />
+                <span class="form-hint">Certificados de Aforro Série F, setembro de 2026.</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Prestação mensal (€)</span>
+                <div class="calc-cell" id="n4-cred-pmt">101,38 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Total pago ao banco (€)</span>
+                <div class="calc-cell" id="n4-cred-total">6 082,92 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>Custo do crédito — só juros (€)</strong></span>
+                <div class="result-cell" id="n4-cred-juros">1 082,92 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Custo em % do valor pedido</span>
+                <div class="calc-cell" id="n4-cred-pct">21,7%</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Se poupasses a mesma prestação, terias ao fim do prazo (€)</span>
+                <div class="calc-cell" id="n4-cred-poup-acum">6 472,28 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>Diferença entre comprar a crédito e poupar primeiro (€)</strong></span>
+                <div class="result-cell" id="n4-cred-diff">1 472,28 €</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📊 Gráfico 2 — Comprar a crédito ou poupar primeiro?</div>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-n4-credito" class="sim-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Bloco 3: Depósito a Prazo vs Certificados de Aforro -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">3. Onde Pôr a Poupança — Depósito a Prazo vs Certificados de Aforro</div>
+            </div>
+            <div class="form-rows" style="margin-bottom: 1rem;">
+              <div class="form-row">
+                <label class="form-label" for="n4-dp-montante">Montante a aplicar (€)</label>
+                <input type="number" id="n4-dp-montante" class="excel-input" value="1000" step="100" oninput="recalcN4()" />
+                <span class="form-hint">Capital aplicado durante 1 ano.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-dp-taxa">Taxa do depósito a prazo (%)</label>
+                <input type="number" id="n4-dp-taxa" class="excel-input" value="1.5" step="0.1" oninput="recalcN4()" />
+                <span class="form-hint">Valor ilustrativo — varia muito de banco para banco.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-ca-taxa">Taxa dos Certificados de Aforro (%)</label>
+                <input type="number" id="n4-ca-taxa" class="excel-input" value="2.5" step="0.1" oninput="recalcN4()" />
+                <span class="form-hint">IGCP, Série F, setembro de 2026: 2,500% brutos.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-irs-cap">IRS sobre juros (%)</label>
+                <input type="number" id="n4-irs-cap" class="excel-input" value="28" step="1" oninput="recalcN4()" />
+                <span class="form-hint">Taxa liberatória sobre rendimentos de capitais.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-inflacao">Inflação anual (%)</label>
+                <input type="number" id="n4-inflacao" class="excel-input" value="2.3" step="0.1" oninput="recalcN4()" />
+                <span class="form-hint">INE: média anual de 2025.</span>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="sim-table">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th class="num">Juro bruto 1.º ano</th>
+                    <th class="num">IRS retido</th>
+                    <th class="num">Juro líquido</th>
+                    <th class="num">Taxa líquida</th>
+                    <th class="num">Taxa real (após inflação)</th>
+                  </tr>
+                </thead>
+                <tbody id="n4-dp-tbody"></tbody>
+              </table>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.65rem;">
+              Repara na última coluna: se a taxa real for negativa, o dinheiro está a render e mesmo assim a perder poder de compra. Os Certificados de Aforro têm ainda prémios de permanência a partir do 2.º ano e capitalização trimestral.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blocos 4 e 5: Ter um Negócio + Seguros -->
+      <div class="grid-2">
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">4. Ter um Negócio — Quando é que Começa a Dar Lucro?</div>
+            </div>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n4-neg-inv">Investimento inicial (€)</label>
+                <input type="number" id="n4-neg-inv" class="excel-input" value="3000" step="100" oninput="recalcN4()" />
+                <span class="form-hint">Equipamento, licenças, stock inicial.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-neg-fixos">Custos fixos mensais (€)</label>
+                <input type="number" id="n4-neg-fixos" class="excel-input" value="500" step="50" oninput="recalcN4()" />
+                <span class="form-hint">Renda, eletricidade, software, seguros.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-neg-preco">Preço de venda por unidade (€)</label>
+                <input type="number" id="n4-neg-preco" class="excel-input" value="8" step="0.5" oninput="recalcN4()" />
+                <span class="form-hint">Quanto o cliente paga por cada unidade.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-neg-var">Custo variável por unidade (€)</label>
+                <input type="number" id="n4-neg-var" class="excel-input" value="3" step="0.5" oninput="recalcN4()" />
+                <span class="form-hint">Matéria-prima e embalagem de cada unidade vendida.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n4-neg-unid">Unidades vendidas por mês</label>
+                <input type="number" id="n4-neg-unid" class="excel-input" value="200" step="10" oninput="recalcN4()" />
+                <span class="form-hint">Volume mensal de vendas.</span>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Margem de contribuição por unidade (€)</span>
+                <div class="calc-cell" id="n4-neg-margem">5,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>PONTO DE EQUILÍBRIO (unidades/mês)</strong></span>
+                <div class="result-cell" id="n4-neg-be">100 unidades</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>Lucro mensal (€)</strong></span>
+                <div class="result-cell" id="n4-neg-lucro">500,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Meses para recuperar o investimento</span>
+                <div class="calc-cell" id="n4-neg-payback">6,0 meses</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">5. Seguros — Pagar um Pouco Para Não Pagar Tudo</div>
+            </div>
+            <p class="card-subtitle">
+              Um seguro não é uma despesa perdida: é a troca de um custo pequeno e certo por um custo enorme e incerto. Preenche os prémios que conheces e vê o peso anual.
+            </p>
+            <div class="table-wrap">
+              <table class="sim-table">
+                <thead>
+                  <tr>
+                    <th>Tipo de seguro</th>
+                    <th>Obrigatório?</th>
+                    <th>Para que serve</th>
+                    <th class="num">Prémio anual (€)</th>
+                  </tr>
+                </thead>
+                <tbody id="n4-seg-tbody"></tbody>
+                <tfoot>
+                  <tr class="row-total">
+                    <td colspan="3">TOTAL ANUAL DE SEGUROS</td>
+                    <td class="num td-calc" id="n4-seg-total">900,00 €</td>
+                  </tr>
+                  <tr class="row-total">
+                    <td colspan="3"><strong>Custo mensal dos seguros (€)</strong></td>
+                    <td class="num td-result" id="n4-seg-mensal">75,00 €</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela 20 Anos Juros Simples vs Compostos -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Tabela Completa (20 Anos) — Juros Simples vs Juros Compostos</div>
+        </div>
+        <div class="table-wrap">
+          <table class="sim-table">
+            <thead>
+              <tr>
+                <th>Ano</th>
+                <th class="num">Total investido (€)</th>
+                <th class="num">Com juros simples (€)</th>
+                <th class="num">Com juros compostos (€)</th>
+                <th class="num">Diferença (€)</th>
+              </tr>
+            </thead>
+            <tbody id="n4-juros-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pedagogical-note">
+          <strong>Pressupostos:</strong> taxas de juro constantes ao longo de todo o prazo; prestação de crédito calculada pelo método francês (prestação constante), sem comissões, imposto do selo nem seguros associados — na prática a TAEG é superior à TAN; juros da poupança capitalizados anualmente.
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: NÍVEL 5 (PATRIMÓNIO E PORTFÓLIO) ==================== -->
+    <section id="tab-nivel5" class="tab-panel">
+      <div class="level-banner">
+        <div class="level-banner-top">
+          <div>
+            <span class="level-tag">Nível 5 · Longo Prazo &amp; Investimento</span>
+            <h2>NÍVEL 5 — Criação de um Património / Portfólio</h2>
+            <p>
+              <strong>Foco: Longo Prazo.</strong> Investir não é adivinhar o que sobe amanhã. É repartir a poupança por instrumentos diferentes, cada um com o seu risco e a sua liquidez, e deixar o tempo trabalhar. A primeira peça é sempre o <strong>FUNDO DE EMERGÊNCIA</strong>: dinheiro acessível para 3 a 6 meses de despesas. Só depois disso faz sentido pensar em ações ou ETF.
+            </p>
+            <div class="banner-Controls">
+              <button class="btn-banner highlight" onclick="syncFromN1ToN5()">🔗 Trazer Poupança/Despesas do Nível 1</button>
+              <button class="btn-banner" onclick="resetN5()">📄 Repor Valores do Excel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. CONCLUSÕES (KPI Strip) -->
+      <div class="kpi-grid">
+        <div class="kpi-card result">
+          <span class="kpi-label">Património ao fim de 20 anos</span>
+          <div class="kpi-value" id="n5-kpi-patrimonio">56 850,40 €</div>
+          <span class="kpi-note" id="n5-kpi-bolso">Do teu bolso saíram: 37 000,00 €</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Gerado pelos rendimentos</span>
+          <div class="kpi-value" id="n5-kpi-rendimentos">19 850,40 €</div>
+          <span class="kpi-note" id="n5-kpi-prop">34,9% do património veio dos rendimentos</span>
+        </div>
+        <div class="kpi-card calc">
+          <span class="kpi-label">Valor a preços de hoje (20 anos)</span>
+          <div class="kpi-value" id="n5-kpi-hoje">36 076,21 €</div>
+          <span class="kpi-note">O que esse património compraria aos preços de hoje.</span>
+        </div>
+        <div class="kpi-card result">
+          <span class="kpi-label">Fundo de Emergência (6 meses)</span>
+          <div class="kpi-value" id="n5-kpi-fe-meses">110,7 meses</div>
+          <span class="kpi-note" id="n5-kpi-fe-meta">Meta recomendada: 4 320,00 € (30,00 €/mês)</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- 1. Os Teus Dados + 3. Fundo de Emergência -->
+        <div class="col-5">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">1. Os Teus Dados</div>
+            </div>
+            <div class="form-rows">
+              <div class="form-row">
+                <label class="form-label" for="n5-cap-ini">Capital inicial (€)</label>
+                <input type="number" id="n5-cap-ini" class="excel-input" value="1000" step="100" oninput="recalcN5()" />
+                <span class="form-hint">O que já tens guardado hoje.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n5-poup-mensal">Poupança mensal disponível (€)</label>
+                <input type="number" id="n5-poup-mensal" class="excel-input" value="150" step="10" oninput="recalcN5()" />
+                <span class="form-hint">Vem do saldo do Nível 1.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n5-despesas">Despesas mensais (€)</label>
+                <input type="number" id="n5-despesas" class="excel-input" value="720" step="20" oninput="recalcN5()" />
+                <span class="form-hint">Necessário para dimensionar o fundo de emergência.</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="n5-inflacao">Inflação anual (%)</label>
+                <input type="number" id="n5-inflacao" class="excel-input" value="2.3" step="0.1" oninput="recalcN5()" />
+                <span class="form-hint">INE: média anual de 2025.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🛡️ 3. O Fundo de Emergência Vem Primeiro</div>
+            </div>
+            <div class="form-rows">
+              <div class="form-row compact">
+                <span class="form-label">Fundo de emergência recomendado (6 meses de despesas)</span>
+                <div class="calc-cell" id="n5-fe-rec">4 320,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label">Quanto lhe estás a destinar por mês (€)</span>
+                <div class="calc-cell" id="n5-fe-mensal">30,00 €</div>
+              </div>
+              <div class="form-row compact">
+                <span class="form-label"><strong>Meses até o completares (descontando capital inicial)</strong></span>
+                <div class="result-cell" id="n5-fe-tempo">110,7 meses</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráficos N5 -->
+        <div class="col-7">
+          <div class="grid-2" style="margin-bottom: 0;">
+            <div class="col-6">
+              <div class="card" style="height: calc(100% - 1.5rem);">
+                <div class="card-header">
+                  <div class="card-title">📊 Repartição da Poupança Mensal</div>
+                </div>
+                <div class="chart-box">
+                  <canvas id="chart-n5-aloc" class="sim-chart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card" style="height: calc(100% - 1.5rem);">
+                <div class="card-header">
+                  <div class="card-title">📈 Poupar vs Investir (20 anos)</div>
+                </div>
+                <div class="chart-box">
+                  <canvas id="chart-n5-evol" class="sim-chart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Como Repartir a Poupança (Tabela Interativa da Carteira) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">2. Como Repartir a Poupança (Alocação do Portfólio)</div>
+          <div id="n5-aloc-badge" class="alert-badge ok">OK — 100% da poupança alocada</div>
+        </div>
+        <p class="card-subtitle">
+          Define a percentagem que queres colocar em cada instrumento. A soma tem de dar 100%. Os retornos anuais são <strong>ESTIMATIVAS ILUSTRATIVAS</strong> — nenhum instrumento garante rendibilidade futura, e quanto maior o retorno esperado, maior o risco de perder dinheiro pelo caminho.
+        </p>
+        <div class="table-wrap">
+          <table class="sim-table">
+            <thead>
+              <tr>
+                <th>Instrumento</th>
+                <th class="num">% da poupança</th>
+                <th class="num">Retorno anual estimado (%)</th>
+                <th>Risco</th>
+                <th>Liquidez</th>
+                <th class="num">€ por mês</th>
+                <th class="num">Valor a 10 anos (€)</th>
+                <th class="num">Valor a 20 anos (€)</th>
+              </tr>
+            </thead>
+            <tbody id="n5-inst-tbody"></tbody>
+            <tfoot>
+              <tr class="row-total">
+                <td>TOTAIS / MÉDIA PONDERADA</td>
+                <td class="num td-calc" id="n5-tot-pct">100,0%</td>
+                <td class="num td-result" id="n5-tot-ret">4,18%</td>
+                <td colspan="2">Retorno médio ponderado da carteira</td>
+                <td class="num td-calc" id="n5-tot-eur">150,00 €</td>
+                <td class="num td-calc" id="n5-tot-10a">21 920,90 €</td>
+                <td class="num td-calc" id="n5-tot-20a">56 322,61 €</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. Evolução do Património (Ano 0 a 20) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">4. Evolução do Património ao Longo de 20 Anos (Incluindo Capital Inicial + Reforços Mensais)</div>
+        </div>
+        <div class="table-wrap">
+          <table class="sim-table">
+            <thead>
+              <tr>
+                <th>Ano</th>
+                <th class="num">Dinheiro parado, sem investir (€)</th>
+                <th class="num">Carteira investida (€)</th>
+                <th class="num">Diferença / Ganho (€)</th>
+                <th class="num">Carteira a preços de hoje (€)</th>
+              </tr>
+            </thead>
+            <tbody id="n5-evol-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pedagogical-note">
+          <strong>VALORES ILUSTRATIVOS.</strong> Os retornos anuais indicados (1% a 7%) foram escolhidos para fins pedagógicos, com base em ordens de grandeza históricas de cada classe de ativo, e NÃO são previsões nem recomendações de investimento. A simulação assume retorno constante todos os anos — na realidade os mercados sobem e descem, e uma carteira de ações pode perder 30% ou mais num único ano. Não estão considerados impostos sobre mais-valias (28%), comissões de corretagem nem os benefícios fiscais do PPR. Taxa dos Certificados de Aforro: IGCP, Série F, setembro de 2026 (2,500% brutos).
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
